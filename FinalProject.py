@@ -5,7 +5,7 @@ from sklearn.linear_model import LogisticRegression
 import streamlit as st
 import joblib
 
-s = pd.read_csv("social_media_usage.csv")
+s = pd.read_csv("social_media_usage (1).csv")
 def clean_sm (x):
     return np.where(x == 1, 1, 0)
 ss = pd.DataFrame({
