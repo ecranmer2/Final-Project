@@ -12,7 +12,7 @@ ss = pd.DataFrame({
     "parent":[1, 0, 1, 0, 1, 0, 1, 0], # 1 is a parent, 0 is not a parent
     "married":[1, 0, 1, 0, 1, 0, 1, 0], # 1 is married, 0 is not married
     "female":[1, 0, 1, 0, 1, 0, 1, 0], # 1 is female, 0 is not female
-    "age": range(1:150)
+    "age": range(1,150),
 })
 
 y = ss["sm_li"]
