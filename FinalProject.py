@@ -9,6 +9,8 @@ from sklearn.metrics import confusion_matrix
 import streamlit as st
 import joblib
 
+lr = LogisticRegression(class_weight='balanced')
+
 def li_app (income, education, parent, married, female, age):
 
     #create person
