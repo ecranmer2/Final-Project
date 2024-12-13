@@ -5,23 +5,31 @@ from sklearn.linear_model import LogisticRegression
 import streamlit as st
 import joblib
 
-
-np.random.seed(42)
+s = pd.read_csv("social_media_usage.csv")
+def clean_sm (x):
+    return np.where(x == 1, 1, 0)
 ss = pd.DataFrame({
-    "sm_li": np.random.choice([0, 1], size=100),
-    "income": np.random.randint(1, 9, size=100),
-    "education": np.random.randint(1, 9, size=100),
-    "parent": np.random.choice([0, 1], size=100),
-    "married": np.random.choice([0, 1], size=100),
-    "female": np.random.choice([0, 1], size=100),
-    "age": np.random.randint(1, 101, size=100),
+    "sm_li":clean_sm(s["web1h"]),
+    "income":np.where(s["income"] > 9, np.nan, s["income"]),
+    "education":np.where(s["educ2"] > 8, np.nan, s["educ2"]),
+    "parent":np.where(s["par"] == 1, 1, 0), # 1 is a parent, 0 is not a parent
+    "married":np.where(s["marital"] == 1, 1, 0), # 1 is married, 0 is not married
+    "female":np.where(s["gender"] == 2, 1, np.where(s["gender"] == 1, 0, np.nan)), # 1 is female, 0 is not female
+    "age":np.where(s["age"] > 97, np.nan, s["age"])
 })
-
+ss = ss.dropna()
 y = ss["sm_li"]
 X = ss[["income", "education", "parent", "married", "female", "age"]]
 
+X_train, X_test, y_train, y_test = train_test_split(X.values,
+                                                    y,
+                                                    stratify=y,
+                                                    test_size=0.2,
+                                                    random_state=987)
 lr = LogisticRegression(class_weight='balanced')
-lr.fit(X, y)
+lr.fit(X_train, y_train)
+y_pred = lr.predict(X_test)
+
 
 def li_app(income, education, parent, married, female, age):
     # Create person
