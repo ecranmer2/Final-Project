@@ -47,7 +47,7 @@ def li_app(income, education, parent, married, female, age):
 st.title("LinkedIn User Predictor")
 st.write("Enter the details below to find out if someone is likely to be a LinkedIn user.")
 
-# User input fields
+# User input
 income = st.number_input("Income (1–8)", min_value=1, max_value=8, step=1, value=2)
 education = st.number_input("Education Level (1–8)", min_value=1, max_value=8, step=1, value=2)
 
@@ -65,3 +65,5 @@ if st.button("Predict"):
         st.subheader("Prediction Results")
         st.write(f"**Predicted Class:** {result['Predicted Class']}")
         st.write(f"**Probability of LinkedIn User:** {result['Probability of LinkedIn User']}")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
