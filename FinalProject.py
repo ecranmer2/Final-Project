@@ -1,19 +1,32 @@
 # load packages
 import pandas as pd
 import numpy as np
-import altair as alt
 from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
-from sklearn.metrics import confusion_matrix
 import streamlit as st
 import joblib
 
-lr = LogisticRegression(class_weight='balanced')
+ss = pd.DataFrame({
+    "sm_li":[1, 0, 1, 0, 1, 0, 1, 0],
+    "income": [1, 2, 3, 4, 5, 6, 7, 8],
+    "education":[1, 2, 3, 4, 5, 6, 7, 8],
+    "parent":[1, 0, 1, 0, 1, 0, 1, 0], # 1 is a parent, 0 is not a parent
+    "married":[1, 0, 1, 0, 1, 0, 1, 0], # 1 is married, 0 is not married
+    "female":[1, 0, 1, 0, 1, 0, 1, 0], # 1 is female, 0 is not female
+    "age": range(1:150)
+})
 
-def li_app (income, education, parent, married, female, age):
+y = ss["sm_li"]
+X = ss[["income", "education", "parent", "married", "female", "age"]]
 
-    #create person
+# Initialize and fit model
+lr = LogisticRegression()
+lr.fit(X, y)
+
+# Alternatively, load a pre-trained model
+# lr = joblib.load("linkedin_model.pkl")
+
+def li_app(income, education, parent, married, female, age):
+    # Create person
     person = [
         income,
         education,
@@ -23,14 +36,15 @@ def li_app (income, education, parent, married, female, age):
         age
     ]
 
-    #predict
+    # Predict
     predict = lr.predict([person])
     prob = np.round(lr.predict_proba([person]) * 100, 2)
 
     return {
-    "Predicted Class": "LinkedIn User" if predict[0] == 1 else "Not a LinkedIn User",
-    "Probability of LinkedIn User": f"{prob[0][1]}%"
+        "Predicted Class": "LinkedIn User" if predict[0] == 1 else "Not a LinkedIn User",
+        "Probability of LinkedIn User": f"{prob[0][1]}%"
     }
+
 # Streamlit app
 st.title("LinkedIn User Predictor")
 st.write("Enter the details below to find out if someone is likely to be a LinkedIn user.")
