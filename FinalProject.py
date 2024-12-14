@@ -140,12 +140,19 @@ actual_gender = st.selectbox("Gender",
                                       "Prefer Not to Say"])
 age = st.number_input("Age", min_value=1, max_value=120, step=1, value=30)
 
-# Predict button
 if st.button("Predict"):
     try:
-        result = li_app(income, education, parent, married, female, age)
+        result = li_app(
+            actual_income,  # Pass the actual income entered by the user
+            actual_education,  # Pass the actual education level
+            actual_parent,  # Pass the actual parent status
+            actual_married,  # Pass the actual marital status
+            actual_gender,  # Pass the actual gender
+            age  # Pass the age
+        )
         st.subheader("Prediction Results")
         st.write(f"**Predicted Class:** {result['Predicted Class']}")
         st.write(f"**Probability of LinkedIn User:** {result['Probability of LinkedIn User']}")
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
