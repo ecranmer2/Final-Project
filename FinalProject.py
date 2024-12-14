@@ -35,40 +35,110 @@ lr.fit(X_train, y_train)
 y_pred = lr.predict(X_test)
 
 
-def li_app(income, education, parent, married, female, age):
-    # Create person
+def new_income(actual_income):
+    if actual_income < 10000:
+        return 1
+    elif 10000 <= actual_income < 20000:
+        return 2
+    elif 20000 <= actual_income < 30000:
+        return 3
+    elif 30000 <= actual_income < 40000:
+        return 4
+    elif 40000 <= actual_income < 50000:
+        return 5
+    elif 50000 <= actual_income < 75000:
+        return 6
+    elif 75000 <= actual_income < 100000:
+        return 7
+    else:
+        return 8
+
+
+def new_education(actual_education):
+    if actual_education == "Less than high school":
+        return 1
+    elif actual_education == "High school incomplete":
+        return 2
+    elif actual_education == "High school graduate":
+        return 3
+    elif actual_education == "Some college, no degree":
+        return 4
+    elif actual_education == "Associate degree":
+        return 5
+    elif actual_education == "Bachelor's degree":
+        return 6
+    elif actual_education == "Some postgraduate or professional schooling":
+        return 7
+    else:
+        return 8
+
+
+def new_parent(actual_parent):
+    if actual_parent == "Yes":
+        return 1
+    else:
+        return 0
+
+
+def new_married(actual_married):
+    if actual_married == "Yes":
+        return 1
+    else:
+        return 0
+
+
+def new_gender(actual_gender):
+    if actual_gender == "Female" or actual_gender == "Transgender Female":
+        return 1
+    else:
+        return 0
+
+
+def li_app(actual_income, actual_education, actual_parent, actual_married, actual_gender, age):
+    income = new_income(actual_income)
+    education = new_education(actual_education)
+    parent = new_parent(actual_parent)
+    married = new_married(actual_married)
+    female = new_gender(actual_gender)
+
+    # create person
     person = [
         income,
         education,
         parent,
         married,
         female,
-        age,
+        age
     ]
 
-    # Predict
+    # predict
     predict = lr.predict([person])
     prob = np.round(lr.predict_proba([person]) * 100, 2)
 
     return {
         "Predicted Class": "LinkedIn User" if predict[0] == 1 else "Not a LinkedIn User",
-        "Probability of LinkedIn User": f"{prob[0][1]}%",
+        "Probability of LinkedIn User": f"{prob[0][1]}%"
     }
 
-# Streamlit app
+
+# Streamlit
 st.title("LinkedIn User Predictor")
 st.write("Enter the details below to find out if someone is likely to be a LinkedIn user.")
 
 # User input
-income = st.number_input("Income (1–8)", min_value=1, max_value=8, step=1, value=2)
-education = st.number_input("Education Level (1–8)", min_value=1, max_value=8, step=1, value=2)
-
+actual_income = st.number_input("Household Income (e.g., $20,000)", min_value=0, max_value=300000, step=1000,
+                                value=20000)
+education_options = ["Less than high school", "High school incomplete", "High school graduate",
+                     "Some college, no degree", "Associate degree", "Bachelor's degree",
+                     "Some postgraduate or professional schooling", "Graduate degree or higher"]
+actual_education = st.selectbox("Education", education_options)
 # Parent, Married, Female: Select 1 (Yes) or 0 (No)
-parent = st.selectbox("Are you a parent? (1 = Yes, 0 = No)", options=[1, 0])
-married = st.selectbox("Are you married? (1 = Yes, 0 = No)", options=[1, 0])
-female = st.selectbox("Are you female? (1 = Yes, 0 = No)", options=[1, 0])
-
-age = st.number_input("Age (any number)", min_value=1, max_value=120, step=1, value=30)
+actual_parent = st.selectbox("Are you a parent?", options=["Yes", "No"])
+actual_married = st.selectbox("Are you married?", options=["Yes", "No"])
+actual_gender = st.selectbox("Gender",
+                             options=["Male", "Female", "Non-Binary", "Transgender Male", "Transgender Female",
+                                      "Prefer Not to Say"])
+age = st.number_input("Age", min_value=1, max_value=120, step=1, value=30)
 
 # Predict button
 if st.button("Predict"):
