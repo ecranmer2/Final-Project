@@ -126,7 +126,7 @@ st.title("LinkedIn User Predictor")
 st.write("Enter the details below to find out if someone is likely to be a LinkedIn user.")
 
 # User input
-actual_income = st.number_input("Household Income (e.g., $20,000)", min_value=0, step=1000,
+actual_income = st.number_input("Household Income", min_value=0, step=1000,
                                 value=20000)
 education_options = ["Less than high school", "High school incomplete", "High school graduate",
                      "Some college, no degree", "Associate degree", "Bachelor's degree",
